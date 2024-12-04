@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+  <title>Perfect Clone</title>
+ <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <style>
+    /* Reset Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #F1E0F0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      height: 100px;
+      background: linear-gradient(to top, #5F33AC, #1B3BA0);
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom-left-radius: 25px;
+      border-bottom-right-radius: 25px;
+      position: sticky;
+      top: 0;
+    }
+
+    .top-bar .welcome {
+      font-size: 18px;
+    }
+
+    .top-bar .icons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .top-bar .icons img {
+      width: 25px;
+      height: 25px;
+    }
+
+    /* Search Bar */
+    .search-bar {
+  margin: 15px auto;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  width: 90%;
+  max-width: 600px;
+  background: white;
+  border-radius: 20px;
+  padding: 10px 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  flex-grow: 1;
+  margin-right: 10px; /* Add space between the input and the icon */
+  font-size: 14px;
+}
+.search-bar .fa-search {
+  opacity: 0.5; /* 50% opacity */
+}
+.search-bar img {
+  
+  width: 30px; /* Adjust width for a 3x2 ratio */
+  height: 20px; /* Adjust height for a 3x2 ratio */
+  object-fit: contain;
+}
+
+    /* Main Content */
+    .content {
+      padding: 0 20px 80px;
+      
+    }
+
+    .section-title {
+      color: #5B74AA;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 20px 0 10px;
+    }
+
+    .section-title span {
+      font-size: 22px;
+      margin-left: 10px;
+    }
+
+    .icon-box {
+      background-color: #FBF6FA;
+      border-radius: 20px;
+      padding: 15px;
+     
+      margin-bottom: 20px;
+    }
+
+    .subjects, .resources {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 columns for subjects and resources */
+      grid-template-rows: repeat(3, 1fr); /* 3 rows for subjects */
+      gap: 15px;
+    }
+
+    .subject, .resource {
+      background-color: ;
+      border-radius: 20px;
+        text-align: center;
+      padding: 0px 1px;
+    }
+
+    .subject img, .resource img {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 10px;
+      
+    
+    }
+
+    .subject p, .resource p {
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    /* Fixed Bottom Navigation Bar */
+    .bottom-nav {
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+    height: 80px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .bottom-nav div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .bottom-nav img {
+      width: 25px;
+      height: 25px;
+      margin-bottom: 5px;
+    }    .select-box {
+  position: absolute;
+  top:140px;
+  left: 15px;
+  padding: 2px 5px; /* Further decreased padding to make it smaller */
+  background-color: transparent; /* Remove background */
+  border: none; /* Remove border */
+  font-size: 12px; /* Smaller font size */
+  color: #333;
+  font-weight: bold;
+  cursor: pointer; /* Keep the cursor as pointer */
+  text-transform: uppercase; /* Uppercase text */
+  display: inline-block; /* Ensure it stays inline */
+}
+
+.select-box span {
+  padding: 0; /* Remove any additional padding */
+}
+    /* Popup Overlay */
+    .popup-overlay {
+      position: fixed;
+      bottom: -100%;
+      left: 0;
+      width: 100%;
+      height: 75%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: none;
+      opacity: 0;
+      transition: bottom 1s ease-in-out, opacity 1s ease;
+    }
+
+    .popup-overlay.show {
+      display: block;
+      bottom: 0;
+      opacity: 1;
+    }
+
+    /* Popup Content */
+    .popup-content {
+      background-color: white;
+      border-radius: 12px 12px 0 0;
+      height: 100%;
+      padding: 20px;
+      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+    }
+
+    .popup-content ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .popup-content ul li {
+      padding: 15px;
+      margin: 10px 0;
+      background-color: #fdfdfd;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      font-size: 16px;
+      color: #555;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: transform 1s ease, opacity 1s ease;
+      position: relative; /* Needed for positioning the pseudo-element */
+    }
+
+    /* Add line below each list item except the last one */
+    .popup-content ul li:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background-color: #ddd;
+    }
+
+    .popup-content ul li:hover {
+      background-color: #f0f0f0;
+    }
+
+    .popup-content ul li.show-item {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="welcome">Welcome, Praveen</div>
+    <div class="icons">
+      <img src="https://via.placeholder.com/25" alt="Icon">
+      <img src="https://via.placeholder.com/25" alt="Icon">
+      <img src="https://via.placeholder.com/25" alt="Icon">
+    </div>
+  </div>
+
+  <!-- Search Bar -->
+ 
+<div class="search-bar">
+  <input type="text" placeholder="Search">
+  <i class="fa fa-search"></i>
+</div>
+  <br><br><br><br>
+  <!-- Content -->
+  <div class="content">
+    <!-- Subjects -->
+    <div>
+      <div class="select-box" onclick="openPopup(event)">
+    <span id="selected-option">Select Option</span><span style='font-size:30px;'>&#8628;</span>
+  </div>
+
+  <!-- Popup for Options -->
+  <div class="popup-overlay" id="popup">
+    <div class="popup-content">
+      <ul>
+        <li onclick="selectOption('JEE Crash')">JEE Crash</li>
+        <li onclick="selectOption('JEE Mission 99 Percentile')">JEE Mission 99 Percentile</li>
+        <li onclick="selectOption('Plus One (JEE) 2023-2024')">Plus One (JEE) 2023-2024</li>
+        <li onclick="selectOption('Plus One Science Improvement')">Plus One Science Improvement</li>
+        <li onclick="selectOption('Plus Two (JEE)')">Plus Two (JEE)</li>
+        <li onclick="selectOption('Plus Two KEAM + Board')">Plus Two KEAM + Board</li>
+      </ul>
+    </div>
+  </div>
+      <div class="section-title">Subjects <span>📚</span></div>
+      <div class="icon-box">
+        <div class="subjects">
+          <div class="subject">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110608.jpg" alt="Maths">
+            <p>Maths</p>
+          </div>
+          <div class="subject">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110610.jpg" alt="Physics">
+            <p>Physics</p>
+          </div>
+          <div class="subject">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110611.jpg" alt="Chemistry">
+            <p>Chemistry</p>
+          </div>
+          <div class="subject">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110300.jpg" alt="Biology">
+            <p>Biology</p>
+          </div>
+          <div class="subject">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110612.jpg" alt="Computer Science">
+            <p>Computer Science</p>
+          </div>
+          <div class="subject">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110613.jpg" alt="Hindi">
+            <p>Hindi</p>
+          </div>
+          <div class="subject">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110614.jpg" alt="Arabic">
+            <p>Arabic</p>
+          </div>
+          <div class="subject">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110615.jpg" alt="English">
+            <p>English</p>
+          </div>
+          <div class="subject">
+            <img src="https://via.placeholder.com/50" alt="Malayalam">
+            <p>Malayalam</p>
+          </div>
+          <div class="subject">
+            <img src="https://via.placeholder.com/50" alt="History">
+            <p>History</p>
+          </div>
+          <div class="subject">
+            <img src="https://via.placeholder.com/50" alt="Geography">
+            <p>Geography</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resources -->
+    <div>
+      <div class="section-title">Resources <span>✏️📐</span></div>
+      <div class="icon-box">
+        <div class="resources">
+          <div class="resource">
+            <img src="https://via.placeholder.com/50" alt="Board PYQ">
+            <p>Board PYQ</p>
+          </div>
+          <div class="resource">
+            <img src="https://via.placeholder.com/50" alt="Chapter Wise">
+            <p>Chapter Wise</p>
+          </div>
+          <div class="resource">
+            <img src="https://via.placeholder.com/50" alt="Descriptive">
+            <p>Descriptive</p>
+          </div>
+          <div class="resource">
+            <img src="https://via.placeholder.com/50" alt="Material">
+            <p>Material</p>
+          </div>
+          <div class="resource">
+            <img src="https://via.placeholder.com/50" alt="Notes">
+            <p>Notes</p>
+          </div>
+          <div class="resource">
+            <img src="https://via.placeholder.com/50" alt="Sample Papers">
+            <p>Sample Papers</p>
+          </div>
+          <div class="resource">
+            <img src="https://via.placeholder.com/50" alt="Books">
+            <p>Books</p>
+          </div>
+          <div class="resource">
+            <img src="https://via.placeholder.com/50" alt="Practice">
+            <p>Practice</p>
+          </div>
+          <div class="resource">
+            <img src="https://via.placeholder.com/50" alt="Previous Year">
+            <p>Previous Year</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div>
+      <img src="https://via.placeholder.com/25" alt="Home">
+      <p>Home</p>
+    </div>
+    <div>
+      <img src="https://via.placeholder.com/25" alt="Exams">
+      <p>Exams</p>
+    </div>
+    <div>
+      <img src="https://via.placeholder.com/25" alt="Daily Tasks">
+      <p>Tasks</p>
+    </div>
+    <div>
+      <img src="https://via.placeholder.com/25" alt="Downloads">
+      <p>Downloads</p>
+    </div>
+    <div>
+      <img src="https://via.placeholder.com/25" alt="Analysis">
+      <p>Analysis</p>
+    </div>
+  </div>
+    <script>
+    // Load saved option from localStorage
+    window.onload = function() {
+      const selectedOption = localStorage.getItem('selectedOption');
+      if (selectedOption) {
+        document.getElementById('selected-option').textContent = selectedOption;
+      }
+    };
+
+    // Open Popup with Animation
+    function openPopup(event) {
+      event.stopPropagation();
+      const popup = document.getElementById('popup');
+      popup.classList.add('show');
+
+      const listItems = document.querySelectorAll('.popup-content ul li');
+      listItems.forEach((item, index) => {
+        item.classList.remove('show-item');
+        void item.offsetWidth;
+        setTimeout(() => {
+          item.classList.add('show-item');
+        }, 100 * index);
+      });
+    }
+
+    // Select Option and Close Popup
+    function selectOption(option) {
+      const selectedOption = document.getElementById('selected-option');
+      selectedOption.textContent = option;
+      localStorage.setItem('selectedOption', option);
+      closePopup();
+    }
+
+    // Close Popup
+    function closePopup() {
+      const popup = document.getElementById('popup');
+      const listItems = document.querySelectorAll('.popup-content ul li');
+      listItems.forEach((item, index) => {
+        item.classList.remove('show-item');
+        void item.offsetWidth;
+        setTimeout(() => {
+          item.style.opacity = '0';
+          item.style.transform = 'translateY(20px)';
+        }, 100 * index);
+      });
+
+      setTimeout(() => {
+        popup.classList.remove('show');
+        resetAnimations();
+      }, 1000);
+    }
+
+    // Reset Animations
+    function resetAnimations() {
+      const listItems = document.querySelectorAll('.popup-content ul li');
+      listItems.forEach((item) => {
+        item.style.opacity = '';
+        item.style.transform = '';
+      });
+    }
+
+    // Close Popup if Clicked Outside
+    window.onclick = function(event) {
+      const popup = document.getElementById('popup');
+      const selectBox = document.querySelector('.select-box');
+      if (!selectBox.contains(event.target) && !popup.contains(event.target)) {
+        closePopup();
+      }
+    };
+  </script>
+</body>
+      </html>
