@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-  <title>Perfect Clone</title>
+  <title>EDUPORT</title>
  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> <style>
     /* Reset Styles */
@@ -43,8 +42,21 @@
     .top-bar .icons {
       display: flex;
       gap: 15px;
-    }
+    
 
+  background-color: black; /* Black background */
+  color: white;            /* White text color */
+  padding: 10px 20px;      /* Space inside the bar */
+  border-radius: 20px;     /* Rounded corners */
+  position: fixed;         /* Fix position on the screen */
+  top: 20px;               /* Distance from the top */
+  right: 20px;             /* Distance from the right */
+  font-family: Arial, sans-serif; /* Font styling */
+  font-size: 16px;         /* Text size */
+  text-align: center;      /* Center align the text */
+  z-index: 1000;           /* Ensure it stays on top */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional: Add shadow */
+}
     .top-bar .icons img {
       width: 25px;
       height: 25px;
@@ -87,7 +99,7 @@
 
     /* Main Content */
     .content {
-      padding: 0 20px 80px;
+      padding: 0 19px 80px;
       
     }
 
@@ -115,7 +127,7 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr); /* 4 columns for subjects and resources */
       grid-template-rows: repeat(3, 1fr); /* 3 rows for subjects */
-      gap: 15px;
+      gap: 3px;
     }
 
     .subject, .resource {
@@ -134,38 +146,12 @@
     }
 
     .subject p, .resource p {
-      font-size: 14px;
-      margin-top: 5px;
+      font-size: 13px;
+      margin-top: 4px;
     }
 
     /* Fixed Bottom Navigation Bar */
-    .bottom-nav {
-      border-top-left-radius: 25px;
-      border-top-right-radius: 25px;
-    height: 80px;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: #ffffff;
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .bottom-nav div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 12px;
-    }
-
-    .bottom-nav img {
-      width: 25px;
-      height: 25px;
-      margin-bottom: 5px;
-    }    .select-box {
+   .select-box {
   position: absolute;
   top:140px;
   left: 15px;
@@ -179,7 +165,26 @@
   text-transform: uppercase; /* Uppercase text */
   display: inline-block; /* Ensure it stays inline */
 }
+.visit-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background-color: #16125E;
+  border-radius: 60px;
+  padding: 4px ;
+  margin-right: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  min-width: .5px;
+}
 
+.visit-icons {
+ color:white;
+  display: flex;
+  gap: 10px; /* Adds spacing between the boxes */
+}
 .select-box span {
   padding: 0; /* Remove any additional padding */
 }
@@ -254,20 +259,87 @@
       opacity: 1;
       transform: translateY(0);
     }
-  
+     .bottom-nav {
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      height: 80px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .bottom-nav div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+      outline: none; /* Prevent outline */
+    }
+
+    /* Remove focus and active outline */
+    .bottom-nav div:focus,
+    .bottom-nav div:active,
+    .bottom-nav img:focus,
+    .bottom-nav img:active {
+      outline: none; /* Remove outline on focus */
+      box-shadow: none; /* Remove box-shadow on active/focus */
+    }
+
+    .bottom-nav img {
+      width: 25px;
+      height: 25px;
+      margin-bottom: 5px;
+      transition: transform 0.3s ease;
+    }
+
+    .bottom-nav p {
+      font-size: 12px;
+      transition: transform 0.3s ease, font-size 0.3s ease;
+    }
+
+    /* Active State */
+    .active img {
+      width: 40px;
+      height: 40px;
+      transform: translateY(-5px); /* Move image up */
+    }
+
+    .active p {
+      transform: translateY(5px); /* Move text down */
+      font-size: 14px; /* Increase text size */
+    }
   </style>
 </head>
 <body>
   <!-- Top Bar -->
-  <div class="top-bar">
-    <div class="welcome">Welcome, Praveen</div>
-    <div class="icons">
-      <img src="https://via.placeholder.com/25" alt="Icon">
-      <img src="https://via.placeholder.com/25" alt="Icon">
-      <img src="https://via.placeholder.com/25" alt="Icon">
+ 
+<div class="top-bar">
+  <!-- Welcome Text -->
+  <div class="welcome">Welcome, Praveen</div>
+
+  <!-- Visit Counters -->
+  <div class="visit-icons">
+    <!-- Daily Visits -->
+    <div class="visit-box" id="daily-box">
+      <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110981.jpg" width="20px" height="20px">
+      <span id="daily-count">0</span>
+    </div>
+    <!-- Total Visits -->
+    <div class="visit-box" id="total-box">
+      <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110984.jpg" width="20px"  height="20px">
+      <span id="total-count">0</span>
     </div>
   </div>
-
+</div>
   <!-- Search Bar -->
  
 <div class="search-bar">
@@ -299,49 +371,49 @@
       <div class="section-title">Subjects <span>📚</span></div>
       <div class="icon-box">
         <div class="subjects">
-          <div class="subject">
+          <div class="subject"><a href="www.google.com">
             <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110608.jpg" alt="Maths">
-            <p>Maths</p>
+          </a> <p>Maths</p>
           </div>
-          <div class="subject">
+          <div class="subject"><a href="www.google.com">
             <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110610.jpg" alt="Physics">
-            <p>Physics</p>
+          </a>  <p>Physics</p>
           </div>
-          <div class="subject">
+          <div class="subject"><a href="www.google.com">
             <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110611.jpg" alt="Chemistry">
-            <p>Chemistry</p>
+          </a>   <p>Chemistry</p>
           </div>
-          <div class="subject">
+          <div class="subject"><a href="www.google.com">
             <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110300.jpg" alt="Biology">
-            <p>Biology</p>
+          </a>   <p>Biology</p>
           </div>
-          <div class="subject">
+          <div class="subject"><a href="www.google.com">
             <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110612.jpg" alt="Computer Science">
-            <p>Computer Science</p>
+          </a>   <p>Computer Science</p>
           </div>
-          <div class="subject">
+          <div class="subject"><a href="www.google.com">
             <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110613.jpg" alt="Hindi">
-            <p>Hindi</p>
+          </a>  <p>Hindi</p>
           </div>
-          <div class="subject">
+          <div class="subject"><a href="www.google.com">
             <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110614.jpg" alt="Arabic">
-            <p>Arabic</p>
+          </a>   <p>Arabic</p>
           </div>
-          <div class="subject">
+          <div class="subject"><a href="www.google.com">
             <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110615.jpg" alt="English">
-            <p>English</p>
+          </a>   <p>English</p>
           </div>
-          <div class="subject">
-            <img src="https://via.placeholder.com/50" alt="Malayalam">
-            <p>Malayalam</p>
+          <div class="subject"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110616.jpg" alt="Malayalam">
+          </a>  <p>Malayalam</p>
           </div>
-          <div class="subject">
-            <img src="https://via.placeholder.com/50" alt="History">
-            <p>History</p>
+          <div class="subject"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110975.jpg" alt="History">
+          </a>  <p>On Shot</p>
           </div>
-          <div class="subject">
-            <img src="https://via.placeholder.com/50" alt="Geography">
-            <p>Geography</p>
+          <div class="subject"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110976.jpg" alt="Geography">
+          </a>    <p>Practicles</p>
           </div>
         </div>
       </div>
@@ -352,41 +424,43 @@
       <div class="section-title">Resources <span>✏️📐</span></div>
       <div class="icon-box">
         <div class="resources">
-          <div class="resource">
-            <img src="https://via.placeholder.com/50" alt="Board PYQ">
-            <p>Board PYQ</p>
+          
+          <div class="resource"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110973.jpg" alt="Board PYQ">
+          </a>
+            <p>Lives</p>
           </div>
-          <div class="resource">
-            <img src="https://via.placeholder.com/50" alt="Chapter Wise">
-            <p>Chapter Wise</p>
+          <div class="resource"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110977.jpg" alt="Chapter Wise">
+          </a>  <p>ChapterWise</p><p>PYQ</p>
           </div>
-          <div class="resource">
-            <img src="https://via.placeholder.com/50" alt="Descriptive">
-            <p>Descriptive</p>
+          <div class="resource"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110978.jpg" alt="Descriptive">
+       </a>      <p>Material Solution</p>
           </div>
-          <div class="resource">
-            <img src="https://via.placeholder.com/50" alt="Material">
-            <p>Material</p>
+          <div class="resource"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111025.jpg" alt="Material">
+          </a>   <p>Study Material</p>
           </div>
-          <div class="resource">
-            <img src="https://via.placeholder.com/50" alt="Notes">
-            <p>Notes</p>
+          <div class="resource"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111024.jpg" alt="Notes">
+         </a>    <p>Excercises</p><p>and&nbsp;Solutio..</p>
           </div>
-          <div class="resource">
-            <img src="https://via.placeholder.com/50" alt="Sample Papers">
-            <p>Sample Papers</p>
+          <div class="resource"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111026.jpg" alt="Sample Papers">
+         </a>    <p>XMAS&nbsp;EXAM</p>
           </div>
-          <div class="resource">
-            <img src="https://via.placeholder.com/50" alt="Books">
-            <p>Books</p>
+          <div class="resource"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111027.jpg" alt="Books">
+        </a>     <p>Descriptive Examination</p>
           </div>
-          <div class="resource">
-            <img src="https://via.placeholder.com/50" alt="Practice">
-            <p>Practice</p>
+          <div class="resource"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111028.jpg" alt="Practice">
+        </a>     <p>One&nbsp;Shot</p>
           </div>
-          <div class="resource">
-            <img src="https://via.placeholder.com/50" alt="Previous Year">
-            <p>Previous Year</p>
+          <div class="resource"><a href="www.google.com">
+            <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000111029.jpg" alt="Previous Year">
+         </a>    <p>Year&nbsp;Wise</p><p>PYQ</p>
           </div>
         </div>
       </div>
@@ -394,29 +468,64 @@
   </div>
 
   <!-- Bottom Navigation -->
-  <div class="bottom-nav">
-    <div>
-      <img src="https://via.placeholder.com/25" alt="Home">
+    <div class="bottom-nav">
+    <!-- First Icon -->
+    <div id="home" onclick="activateNav('home', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110880.jpg', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110874.jpg')" tabindex="0">
+      <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110880.jpg" alt="Home" data-default="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110880.jpg">
       <p>Home</p>
     </div>
-    <div>
-      <img src="https://via.placeholder.com/25" alt="Exams">
+
+    <!-- Second Icon -->
+    <div id="exams" onclick="activateNav('exams', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110909.jpg', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110901.jpg')" tabindex="0">
+      <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110909.jpg" alt="Exams" data-default="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110909.jpg">
       <p>Exams</p>
     </div>
-    <div>
-      <img src="https://via.placeholder.com/25" alt="Daily Tasks">
+
+    <!-- Third Icon -->
+    <div id="tasks" onclick="activateNav('tasks', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110915.jpg', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110908.jpg')" tabindex="0">
+      <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110915.jpg" alt="Tasks" data-default="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110915.jpg">
       <p>Tasks</p>
     </div>
-    <div>
-      <img src="https://via.placeholder.com/25" alt="Downloads">
+
+    <!-- Fourth Icon -->
+    <div id="downloads" onclick="activateNav('downloads', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110910.jpg', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110906.jpg')" tabindex="0">
+      <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110910.jpg" alt="Downloads" data-default="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110910.jpg">
       <p>Downloads</p>
     </div>
-    <div>
-      <img src="https://via.placeholder.com/25" alt="Analysis">
+
+    <!-- Fifth Icon -->
+    <div id="analysis" onclick="activateNav('analysis', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110914.jpg', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110905.jpg')" tabindex="0">
+      <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110914.jpg" alt="Analysis" data-default="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110914.jpg">
       <p>Analysis</p>
     </div>
   </div>
     <script>
+  // Function to activate a navigation item
+  function activateNav(id, activeImg, defaultImg) {
+    // Deactivate all icons
+    const navItems = document.querySelectorAll('.bottom-nav div');
+    navItems.forEach((item) => {
+      item.classList.remove('active');
+      const img = item.querySelector('img');
+      img.src = img.dataset.default; // Reset to default image
+    });
+
+    // Activate the clicked icon
+    const activeItem = document.getElementById(id);
+    activeItem.classList.add('active');
+    const activeImgElem = activeItem.querySelector('img');
+    activeImgElem.src = activeImg; // Set the active image
+  }
+
+  // Preselect the "Home" icon on page load
+  window.onload = function () {
+    activateNav(
+      'home',
+      'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110874.jpg', // Active image for "Home"
+      'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110880.jpg'  // Default image for "Home"
+    );
+  };
+
     // Load saved option from localStorage
     window.onload = function() {
       const selectedOption = localStorage.getItem('selectedOption');
@@ -424,7 +533,29 @@
         document.getElementById('selected-option').textContent = selectedOption;
       }
     };
+let lastActive = null;
 
+    // Function to handle activation of nav items
+    function activateNav(id, defaultImg, activeImg) {
+      const activeElement = document.getElementById(id);
+
+      // If an item is already active, remove the active class and revert its image
+      if (lastActive && lastActive !== activeElement) {
+        lastActive.classList.remove('active');
+        const lastImg = lastActive.querySelector('img');
+        lastImg.src = lastImg.dataset.default; // Revert to default image
+      }
+
+      // Add the active class to the clicked element
+      activeElement.classList.add('active');
+
+      // Change the image to the active image
+      const img = activeElement.querySelector('img');
+      img.src = activeImg;
+
+      // Update the last active element
+      lastActive = activeElement;
+    }
     // Open Popup with Animation
     function openPopup(event) {
       event.stopPropagation();
@@ -485,6 +616,27 @@
         closePopup();
       }
     };
+  
+  // Get today's date as a string
+  const today = new Date().toLocaleDateString();
+
+  // Retrieve visit data from localStorage or initialize it
+  const visitData = JSON.parse(localStorage.getItem('visitData')) || { dailyVisits: {}, totalVisits: 0 };
+
+  // Increment daily visits for today
+  if (!visitData.dailyVisits[today]) {
+    visitData.dailyVisits[today] = 0; // Initialize for today if not already set
+  }
+  visitData.dailyVisits[today]++;
+  visitData.totalVisits++;
+
+  // Save updated visit data back to localStorage
+  localStorage.setItem('visitData', JSON.stringify(visitData));
+
+  // Update the visit counts in the HTML
+  document.getElementById('daily-count').innerText = visitData.dailyVisits[today];
+  document.getElementById('total-count').innerText = visitData.totalVisits;
+
   </script>
 </body>
-      </html>
+</html>
