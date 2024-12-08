@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic PDF Viewer</title>
+    <style>
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #F1E0F0;
+    overflow-x: hidden; /* Prevents horizontal scrolling */
+}
+
+.top-bar {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background-color: #FBF6FA;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.top-bar .icon img {
+    cursor: pointer;
+    width: 20px;
+}
+
+.top-bar .title {
+    font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    left: 60px; /* Adjust the title position */
+}
+
+.subject-tabs {
+    display: flex;
+    overflow-x: auto;
+    padding: 10px 0;
+    background-color: #F1E0F0;
+    scrollbar-width: none; /* Hide scrollbar in Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar in Internet Explorer */
+}
+
+.subject-tabs::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in WebKit browsers */
+}
+
+.subject-tab {
+    background: #FBF6FA;
+    padding: 5px 15px;
+    margin: 0 10px;
+    border-radius: 20px;
+    color: #555;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    flex-shrink: 0;
+    border: 1px solid #ddd;
+    transition: all 0.3s ease;
+}
+
+.subject-tab.active {
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    color: white;
+    border-color: #2575fc;
+}
+
+/* Make the subject tabs draggable */
+.subject-tabs {
+    -webkit-user-select: none; /* Prevent text selection */
+    user-select: none;
+    cursor: grab; /* Change cursor to indicate drag */
+}
+
+.subject-tabs:active {
+    cursor: grabbing; /* Change cursor when dragging */
+}
+
+.switch-container {
+    display: flex;
+    position: sticky;
+    top: 10px; /* Ensures it's below the top bar */
+    justify-content: space-between;
+    width: 300px;
+    margin: 20px auto;
+    background-color: #F1E0F0;
+    padding: 10px 0;
+    z-index: 500;
+    position: relative; /* Ensure positioning context for the lines */
+}
+
+.line {
+    position: absolute;
+    height: 3px;
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    bottom: -10px;
+    transition: all 0.3s ease;
+    width: 50%; /* Default width for the lines */
+}
+
+.line.board {
+    left: 0;
+}
+
+.line.jee {
+    left: 50%;
+}
+
+.switch-container .active .line {
+    /* Make sure active state shifts the line to align with the selected tab */
+    width: 50%;
+}
+
+.resource-list {
+    padding: 10px;
+}
+
+.resource-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #FBF6FA;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button-container {
+    display: flex;
+    gap: 10px; /* Adds space between the buttons */
+}
+
+.view-btn, .save-btn {
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.view-btn:hover, .save-btn:hover {
+    background: linear-gradient(90deg, #2575fc, #6a11cb);
+}
+
+.save-btn {
+    background-color: #FFD700; /* Optional: Different color for Save button */
+}
+
+.save-btn:hover {
+    background-color: #FFB800; /* Hover effect for Save button */
+}
+
+.pdf-viewer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 2000;
+    flex-direction: column;
+}
+
+.pdf-top-bar {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pdf-frame {
+    flex: 1;
+    width: 100%;
+    border: none;
+}
+
+.search-page {
+    display: none;
+    padding: 20px;
+    background-color: white;
+    z-index: 1000;
+}
+
+.search-bar {
+    width: 92%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.back-btn {
+    font-size: 16px;
+    cursor: pointer;
+    color: #2575fc;
+}
+
+.content {
+    margin: 20px;
+    overflow-y: auto;
+    max-height: calc(100vh - 150px); /* Adjust to accommodate the top bar and switch container */
+    padding: 10px;
+}
+
+.saved-message {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+    z-index: 9999;
+    animation: slideDown 0.5s ease-in-out;
+}
+
+@keyframes slideDown {
+    0% {
+        top: -50px;
+        opacity: 0;
+    }
+    100% {
+        top: 10px;
+        opacity: 1;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="icon">
+            <a href="index.html">
+                <img src="https://assets.onecompiler.app/42tmq6jud/432chutzm/1000111693.jpg" alt="Back">
+            </a>
+        </div>
+        <div class="title">Chapter Wise PYQ</div>
+        <div class="icon" onclick="openSearchPage()">
+            <img src="https://assets.onecompiler.app/42tmq6jud/432chh46u/1000111691.jpg" alt="Search">
+        </div>
+    </div>
+
+    <div class="search-page" id="search-page">
+        <div class="back-btn" onclick="closeSearchPage()">← Back</div>
+        <input type="text" class="search-bar" id="search-bar" placeholder="Search for a PDF..." oninput="searchPDF()">
+        <div id="search-results"></div>
+    </div>
+
+    <div class="subject-tabs" id="subject-tabs"></div>
+
+    <div class="switch-container">
+        <span id="board-btn" onclick="switchSection('board')">Board</span>
+        <span id="jee-btn" onclick="switchSection('jee')">JEE</span>
+        <div class="line board" id="line"></div>
+    </div>
+
+    <div class="content" id="resource-list"></div>
+
+    <div class="pdf-viewer" id="pdf-viewer">
+        <div class="pdf-top-bar">
+            <div class="icon" onclick="closePDF()">
+                <img src="https://via.placeholder.com/20?text=<" alt="Back">
+            </div>
+        </div>
+        <iframe class="pdf-frame" id="pdf-frame"></iframe>
+    </div>
+
+    <div class="saved-message" id="saved-message">Saved!</div>
+<script>
+    const resourceList = document.getElementById('resource-list');
+    const pdfViewer = document.getElementById('pdf-viewer');
+    const pdfFrame = document.getElementById('pdf-frame');
+    const line = document.getElementById('line');
+    const subjectTabs = document.getElementById('subject-tabs');
+    const searchPage = document.getElementById('search-page');
+    const searchResults = document.getElementById('search-results');
+    const savedMessage = document.getElementById('saved-message');
+
+    const subjects = ["Physics", "Chemistry", "Math", "Biology", "English", "History", "Geography", "Computer Science"];
+
+    const data = {
+        board: {
+            Physics: [
+                { name: "Motion", viewUrl: "https://example.com/motion.pdf" },
+                { name: "Newton's Laws", viewUrl: "https://example.com/newtons-laws.pdf" },
+                { name: "Work and Energy", viewUrl: "https://example.com/work-energy.pdf" },
+                { name: "Gravitation", viewUrl: "https://example.com/gravitation.pdf" },
+                { name: "Waves", viewUrl: "https://example.com/waves.pdf" },
+                { name: "Thermodynamics", viewUrl: "https://example.com/thermodynamics.pdf" },
+                { name: "Optics", viewUrl: "https://example.com/optics.pdf" },
+                { name: "Electrostatics", viewUrl: "https://example.com/electrostatics.pdf" },
+                { name: "Magnetism", viewUrl: "https://example.com/magnetism.pdf" },
+                { name: "Modern Physics", viewUrl: "https://example.com/modern-physics.pdf" }
+            ],
+            Chemistry: [{ name: "Periodic Table", viewUrl: "https://example.com/table.pdf" }],
+            Math: [{ name: "Algebra", viewUrl: "https://example.com/algebra.pdf" }],
+            Biology: [{ name: "Genetics", viewUrl: "https://example.com/genetics.pdf" }],
+            English: [{ name: "Grammar", viewUrl: "https://example.com/grammar.pdf" }]
+        },
+        jee: {
+            Physics: [{ name: "Kinematics", viewUrl: "https://example.com/jee-physics.pdf" }],
+            Chemistry: [{ name: "Reactions", viewUrl: "https://example.com/reactions.pdf" }],
+            Math: [{ name: "Reactions", viewUrl: "https://example.com/reactions.pdf" }]
+        }
+    };
+
+    let currentSection = 'board';
+    let currentSubject = 'Physics';
+
+    function initializeSubjects() {
+        subjectTabs.innerHTML = '';
+        subjects.forEach(subject => {
+            const tab = document.createElement('div');
+            tab.className = 'subject-tab';
+            if (subject === currentSubject) tab.classList.add('active');
+            tab.innerText = subject;
+            tab.onclick = () => switchSubject(subject);
+            subjectTabs.appendChild(tab);
+        });
+    }
+
+    function switchSection(section) {
+        currentSection = section;
+        line.className = `line ${section}`;
+        updateResources();
+    }
+
+    function switchSubject(subject) {
+        currentSubject = subject;
+        document.querySelectorAll('.subject-tab').forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.innerText === subject) tab.classList.add('active');
+        });
+        updateResources();
+    }
+
+    function updateResources() {
+        resourceList.innerHTML = '';
+        const items = data[currentSection][currentSubject] || [];
+        items.forEach(item => {
+            resourceList.innerHTML += `
+                <div class="resource-item">
+                    <div>${item.name}</div>
+                    <div class="button-container">
+                        <button class="view-btn" onclick="viewPDF('${item.viewUrl}')">View</button>
+                        <button class="view-btn save-btn" onclick="saveLink('${item.viewUrl}', '${item.name}')">Save</button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+
+    function viewPDF(url) {
+        pdfFrame.src = url;
+        pdfViewer.style.display = 'flex';
+    }
+
+    function closePDF() {
+        pdfViewer.style.display = 'none';
+        pdfFrame.src = '';
+    }
+
+    function openSearchPage() {
+        document.querySelector('.top-bar').style.display = 'none';
+        searchPage.style.display = 'block';
+    }
+
+    function closeSearchPage() {
+        searchPage.style.display = 'none';
+        document.querySelector('.top-bar').style.display = 'flex';
+    }
+
+    function searchPDF() {
+        const query = document.getElementById('search-bar').value.toLowerCase();
+        const results = [];
+        Object.keys(data).forEach(section => {
+            Object.keys(data[section]).forEach(subject => {
+                const items = data[section][subject];
+                items.forEach(item => {
+                    if (item.name.toLowerCase().includes(query)) {
+                        results.push({ section, subject, name: item.name, viewUrl: item.viewUrl });
+                    }
+                });
+            });
+        });
+
+        searchResults.innerHTML = '';
+        if (results.length > 0) {
+            results.forEach(item => {
+                searchResults.innerHTML += `
+                    <div class="resource-item">
+                        <div><strong>${item.subject} (${item.section})</strong>: ${item.name}</div>
+                        <div class="button-container">
+                            <button class="view-btn" onclick="viewPDF('${item.viewUrl}')">View</button>
+                            <button class="view-btn save-btn" onclick="saveLink('${item.viewUrl}')">Save</button>
+                        </div>
+                    </div>
+                `;
+            });
+        } else {
+            searchResults.innerHTML = '<p>No results found</p>';
+        }
+    }
+
+    function saveLink(url, name) {
+        let savedLinks = JSON.parse(localStorage.getItem('savedLinks')) || [];
+        savedLinks.push({ name, viewUrl: url });
+        localStorage.setItem('savedLinks', JSON.stringify(savedLinks));
+
+        savedMessage.style.display = 'block';
+        setTimeout(() => {
+            savedMessage.style.display = 'none';
+        }, 2000);
+    }
+
+    // Call initializeSubjects and updateResources on page load
+    window.onload = function() {
+        initializeSubjects();
+        updateResources(); // This will display resources for the initial subject
+    };
+</script>
+    
+</body>
+  </html>
