@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saved Links</title>
+    <style>
+        body, html {
+    margin: 0;
+    padding: 0;
+}
+
+.top-bar {
+    position: sticky;
+    top: 0;
+    height: 80px;
+    background: linear-gradient(to top, #5F33AC, #1B3BA0);
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    margin-top: 0; /* Ensure no margin at the top */
+}
+
+        
+
+        .saved-list {
+            padding: 20px;
+        }
+
+        .saved-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: #FBF6FA;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .view-btn {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .view-btn:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+        }
+
+        .delete-btn {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-btn:hover {
+            background-color: darkred;
+        }
+
+        .doc-btn {
+            border: none;
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .link-text {
+            flex-grow: 1;
+        }
+       .bottom-nav {
+      border-top-left-radius: 25px;
+      border-top-right-radius: 25px;
+      height: 80px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: #ffffff;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .bottom-nav div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      user-select: none;
+      outline: none; /* Prevent outline */
+    }
+
+    /* Remove focus and active outline */
+    .bottom-nav div:focus,
+    .bottom-nav div:active,
+    .bottom-nav img:focus,
+    .bottom-nav img:active {
+      outline: none; /* Remove outline on focus */
+      box-shadow: none; /* Remove box-shadow on active/focus */
+    }
+
+    .bottom-nav img {
+      width: 25px;
+      height: 25px;
+      margin-bottom: 5px;
+      transition: transform 0.3s ease;
+    }
+
+    .bottom-nav p {
+      font-size: 12px;
+      transition: transform 0.3s ease, font-size 0.3s ease;
+    }
+
+    /* Active State */
+    .active img {
+      width: 40px;
+      height: 40px;
+      transform: translateY(-5px); /* Move image up */
+    }
+
+    .active p {
+      transform: translateY(5px); /* Move text down */
+      font-size: 14px; /* Increase text size */
+    }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+      
+    </div>
+    
+    <div class="saved-list" id="saved-list"></div>
+    <div class="bottom-nav">
+    <!-- First Icon -->
+    <div id="home" onclick="activateNav('home', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110880.jpg', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110874.jpg')" tabindex="0">
+      <a href="index.html">
+        <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110880.jpg" alt="Home" data-default="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110880.jpg">
+      </a> <p>Home</p>
+    </div>
+
+    <!-- Second Icon -->
+    <div id="exams" onclick="activateNav('exams', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110909.jpg', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110901.jpg')" tabindex="0">
+      <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110909.jpg" alt="Exams" data-default="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110909.jpg">
+      <p>Exams</p>
+    </div>
+
+    <!-- Third Icon -->
+    <div id="tasks" onclick="activateNav('tasks', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110915.jpg', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110908.jpg')" tabindex="0">
+      <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110915.jpg" alt="Tasks" data-default="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110915.jpg">
+      <p>Tasks</p>
+    </div>
+
+    <!-- Fourth Icon -->
+    <div id="downloads" onclick="activateNav('downloads', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110910.jpg', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110906.jpg')" tabindex="0">
+      <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110910.jpg" alt="Downloads" data-default="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110910.jpg">
+      <p>Downloads</p>
+    </div>
+
+    <!-- Fifth Icon -->
+    <div id="analysis" onclick="activateNav('analysis', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110914.jpg', 'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110905.jpg')" tabindex="0">
+      <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110914.jpg" alt="Analysis" data-default="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110914.jpg">
+      <p>Analysis</p>
+    </div>
+  </div>
+    <script>function activateNav(id, activeImg, defaultImg) {
+    // Deactivate all icons
+    const navItems = document.querySelectorAll('.bottom-nav div');
+    navItems.forEach((item) => {
+      item.classList.remove('active');
+      const img = item.querySelector('img');
+      img.src = img.dataset.default; // Reset to default image
+    });
+
+    // Activate the clicked icon
+    const activeItem = document.getElementById(id);
+    activeItem.classList.add('active');
+    const activeImgElem = activeItem.querySelector('img');
+    activeImgElem.src = activeImg; // Set the active image
+  }
+
+  // Preselect the "Home" icon on page load
+  window.onload = function () {
+    activateNav(
+      'home',
+      'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110874.jpg', // Active image for "Home"
+      'https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000110880.jpg'  // Default image for "Home"
+    );
+  };
+
+    // Load saved option from localStorage
+    window.onload = function() {
+      const selectedOption = localStorage.getItem('selectedOption');
+      if (selectedOption) {
+        document.getElementById('selected-option').textContent = selectedOption;
+      }
+    };
+let lastActive = null;
+
+    // Function to handle activation of nav items
+    function activateNav(id, defaultImg, activeImg) {
+      const activeElement = document.getElementById(id);
+
+      // If an item is already active, remove the active class and revert its image
+      if (lastActive && lastActive !== activeElement) {
+        lastActive.classList.remove('active');
+        const lastImg = lastActive.querySelector('img');
+        lastImg.src = lastImg.dataset.default; // Revert to default image
+      }
+
+      // Add the active class to the clicked element
+      activeElement.classList.add('active');
+
+      // Change the image to the active image
+      const img = activeElement.querySelector('img');
+      img.src = activeImg;
+
+      // Update the last active element
+      lastActive = activeElement;
+    }
+        const savedList = document.getElementById('saved-list');
+
+        // Function to display saved links
+        function displaySavedLinks() {
+            const savedLinks = JSON.parse(localStorage.getItem('savedLinks')) || [];
+            if (savedLinks.length === 0) {
+                savedList.innerHTML = '<p>No saved links yet!</p>';
+                return;
+            }
+
+            savedList.innerHTML = '';
+            savedLinks.forEach(item => {
+                savedList.innerHTML += `
+                    <div class="saved-item">
+                        <div class="button-container">
+                            <button class="doc-btn">📄</button> <!-- Document button -->
+                            <div class="link-text">${item.name}</div> <!-- Link text -->
+                        </div>
+                        <div class="button-container">
+                            <a href="${item.viewUrl}" target="_blank">
+                                <button class="view-btn">View</button> <!-- View button -->
+                            </a>
+                            <button class="delete-btn" onclick="deleteLink('${item.viewUrl}')">X</button> <!-- Delete button -->
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Function to delete a saved link
+        function deleteLink(url) {
+            const savedLinks = JSON.parse(localStorage.getItem('savedLinks')) || [];
+            const updatedLinks = savedLinks.filter(item => item.viewUrl !== url);
+            localStorage.setItem('savedLinks', JSON.stringify(updatedLinks));
+            displaySavedLinks();
+        }
+
+        // Load saved links on page load
+        window.onload = displaySavedLinks;
+    </script>
+</body>
+  </html>
